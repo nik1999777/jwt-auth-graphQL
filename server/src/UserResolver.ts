@@ -5,10 +5,12 @@ import {
   Arg,
   Field,
   ObjectType,
+  Ctx,
 } from "type-graphql";
 import { compare } from "bcryptjs";
-import { sign } from "jsonwebtoken";
 import { User } from "./entity/User";
+import { MyContext } from "./MyContext";
+import { createAccessToken, createRefreshToken } from "./auth";
 
 @ObjectType()
 class LoginResponse {
@@ -31,7 +33,8 @@ export class UserResolver {
   @Mutation(() => LoginResponse)
   async login(
     @Arg("email") email: string,
-    @Arg("password") password: string
+    @Arg("password") password: string,
+    @Ctx() { res }: MyContext
   ): Promise<LoginResponse> {
     {
       const user = await User.findOne({
@@ -48,10 +51,10 @@ export class UserResolver {
         throw new Error("bad password");
       }
 
-      //login successfully
+      res.cookie("jid", createRefreshToken(user), { httpOnly: true });
 
       return {
-        accessToken: sign({ userId: user.id }, "affgasd", { expiresIn: "15m" }),
+        accessToken: createAccessToken(user),
       };
     }
   }

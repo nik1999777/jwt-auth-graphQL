@@ -1,3 +1,4 @@
+import "dotenv/config";
 import "reflect-metadata";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
@@ -10,11 +11,12 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-co
   const app = express();
   app.get("/", (_req, res) => res.send("hello"));
 
-  AppDataSource.initialize();
+  await AppDataSource.initialize();
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({ resolvers: [UserResolver] }),
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+    context: ({ res, req }) => ({ res, req }),
   });
 
   await apolloServer.start();
