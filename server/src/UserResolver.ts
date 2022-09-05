@@ -9,10 +9,15 @@ export class UserResolver {
     return "hi";
   }
 
+  @Query(() => [User])
+  users() {
+    return User.find();
+  }
+
   @Mutation(() => Boolean)
   async register(
-    @Arg("email", () => String) email: string,
-    @Arg("password", () => String) password: string
+    @Arg("email") email: string,
+    @Arg("password") password: string
   ) {
     const hashedPassword = await hash(password, 12);
 
@@ -25,5 +30,7 @@ export class UserResolver {
       console.log(err);
       return false;
     }
+
+    return true;
   }
 }
