@@ -6,8 +6,9 @@ import {
   Field,
   ObjectType,
 } from "type-graphql";
-import { User } from "./entity/User";
 import { compare } from "bcryptjs";
+import { sign } from "jsonwebtoken";
+import { User } from "./entity/User";
 
 @ObjectType()
 class LoginResponse {
@@ -41,7 +42,7 @@ export class UserResolver {
         throw new Error("could not find user");
       }
 
-      const valid = compare(password, user.password);
+      const valid = await compare(password, user.password);
 
       if (!valid) {
         throw new Error("bad password");
@@ -50,7 +51,7 @@ export class UserResolver {
       //login successfully
 
       return {
-        accessToken: "",
+        accessToken: sign({ userId: user.id }, "affgasd", { expiresIn: "15m" }),
       };
     }
   }
