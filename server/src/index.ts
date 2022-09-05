@@ -1,8 +1,11 @@
-import express from "express";
 import "reflect-metadata";
+import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "./UserResolver";
+import { AppDataSource } from "./data-source";
+
+AppDataSource.initialize();
 
 (async () => {
   const app = express();
