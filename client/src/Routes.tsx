@@ -11,6 +11,9 @@ export const Routing: React.FC = () => {
         <header>
           <div>
             <div>
+              <Link to='/'>Home</Link>
+            </div>
+            <div>
               <Link to='/register'>Register</Link>
             </div>
             <div>

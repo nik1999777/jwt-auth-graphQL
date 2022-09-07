@@ -8,8 +8,8 @@ import {
   HttpLink,
   concat,
 } from "@apollo/client";
-import Routing from "./Routes";
 import { getAccessToken } from "./accessToken";
+import { App } from "./App";
 
 const httpLink = new HttpLink({ uri: "http://localhost:4000/graphql" });
 
@@ -19,7 +19,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
     operation.setContext(({ headers = {} }) => ({
       headers: {
         ...headers,
-        authorization: localStorage.getItem(accessToken) || null,
+        authorization: `bearer ${accessToken}`,
       },
     }));
   }
@@ -36,7 +36,7 @@ const client = new ApolloClient({
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <Routing />
+      <App />
     </ApolloProvider>
   </React.StrictMode>
 );
