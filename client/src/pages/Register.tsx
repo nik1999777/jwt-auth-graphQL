@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../generated/graphql";
 
-export const Register: React.FC<RouteComponentProps> = ({ history }) => {
+export const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [register] = useRegisterMutation();
+  let navigate = useNavigate();
 
   return (
     <form
@@ -16,7 +17,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
         });
 
         console.log(response);
-        history.push("/");
+        navigate("/");
       }}
     >
       <div>
