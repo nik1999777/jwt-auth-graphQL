@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useMeQuery } from "./generated/graphql";
 
 export const Header = () => {
-  const { data, loading } = useMeQuery({ fetchPolicy: "network-only" });
+  const { data, loading } = useMeQuery();
 
   let body: any = null;
 
