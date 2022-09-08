@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
-import { useMeQuery } from "./generated/graphql";
+import { setAccessToken } from "./accessToken";
+import { useLogoutMutation, useMeQuery } from "./generated/graphql";
 
 export const Header = () => {
   const { data, loading } = useMeQuery();
+  const [logout, { client }] = useLogoutMutation();
 
   let body: any = null;
 
@@ -28,6 +30,19 @@ export const Header = () => {
         </div>
         <div>
           <Link to='/bye'>Bye</Link>
+        </div>
+        <div>
+          {!loading && data && data.me ? (
+            <button
+              onClick={async () => {
+                await logout();
+                setAccessToken("");
+                await client!.resetStore();
+              }}
+            >
+              Logout
+            </button>
+          ) : null}
         </div>
       </div>
       {body}
