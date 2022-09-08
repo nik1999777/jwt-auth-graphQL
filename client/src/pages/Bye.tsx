@@ -3,6 +3,8 @@ import { useByeQuery } from "../generated/graphql";
 export const Bye = () => {
   const { data, loading, error } = useByeQuery({ fetchPolicy: "network-only" });
 
+  console.log(data);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -13,8 +15,10 @@ export const Bye = () => {
   }
 
   if (!data) {
-    return <div>no data </div>;
+    return <div>no data</div>;
   }
+
+  console.log(data.bye);
 
   return <div>{data.bye}</div>;
 };
