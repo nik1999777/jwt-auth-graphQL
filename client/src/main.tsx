@@ -1,36 +1,71 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  ApolloLink,
-  HttpLink,
-  concat,
-} from "@apollo/client";
+import { ApolloProvider } from "@apollo/react-hooks";
+import { ApolloClient } from "apollo-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { HttpLink } from "apollo-link-http";
+import { onError } from "apollo-link-error";
+import { ApolloLink, Observable } from "apollo-link";
 import { getAccessToken } from "./accessToken";
 import { App } from "./App";
 
-const httpLink = new HttpLink({ uri: "http://localhost:4000/graphql" });
+const cache = new InMemoryCache({});
 
-const authMiddleware = new ApolloLink((operation, forward) => {
-  const accessToken = getAccessToken();
-  if (accessToken) {
-    operation.setContext(({ headers = {} }) => ({
-      headers: {
-        ...headers,
-        authorization: `bearer ${accessToken}`,
-      },
-    }));
-  }
+const requestLink = new ApolloLink(
+  (operation, forward) =>
+    new Observable(observer => {
+      let handle: any;
+      Promise.resolve(operation)
+        .then(operation => {
+          const accessToken = getAccessToken();
+          if (accessToken) {
+            operation.setContext({
+              headers: { authorization: `bearer ${accessToken}` },
+            });
+          }
+        })
+        .then(() => {
+          handle = forward(operation).subscribe({
+            next: observer.next.bind(observer),
+            error: observer.error.bind(observer),
+            complete: observer.complete.bind(observer),
+          });
+        })
+        .catch(observer.error.bind(observer));
 
-  return forward(operation);
-});
+      return () => {
+        if (handle) handle.unsubscribe();
+      };
+    })
+);
 
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  credentials: "include",
-  link: concat(authMiddleware, httpLink),
+  link: ApolloLink.from([
+    onError(({ graphQLErrors, networkError }) => {
+      console.log(graphQLErrors);
+      console.log(networkError);
+    }),
+    requestLink,
+    new HttpLink({
+      uri: "http://localhost:4000/graphql",
+      credentials: "include",
+    }),
+  ]),
+  cache,
+  resolvers: {
+    Mutation: {
+      updateNetworkStatus: (_, { isConnected }, { cache }) => {
+        cache.writeData({ data: { isConnected } });
+        return null;
+      },
+    },
+  },
+});
+
+cache.writeData({
+  data: {
+    isConnected: true,
+  },
 });
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

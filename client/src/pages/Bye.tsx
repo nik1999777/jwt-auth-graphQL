@@ -1,7 +1,7 @@
 import { useByeQuery } from "../generated/graphql";
 
 export const Bye = () => {
-  const { data, loading, error } = useByeQuery();
+  const { data, loading, error } = useByeQuery({ fetchPolicy: "network-only" });
 
   if (loading) {
     return <div>Loading...</div>;
