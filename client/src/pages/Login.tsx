@@ -13,6 +13,7 @@ export const Login: React.FC = () => {
     <form
       onSubmit={async e => {
         e.preventDefault();
+
         const response = await login({
           variables: { email, password },
           update: (store, { data }) => {
@@ -31,7 +32,7 @@ export const Login: React.FC = () => {
         console.log(response);
 
         if (response && response.data) {
-          setAccessToken(response.data.login.accessToken);
+          setAccessToken("accessToken", response.data.login.accessToken);
         }
 
         navigate("/");

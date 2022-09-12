@@ -1,9 +1,8 @@
-export let accessToken = "";
-
-export const setAccessToken = (s: string) => {
-  accessToken = s;
+export const setAccessToken = (key: string, value: any) => {
+  localStorage.setItem(key, JSON.stringify(value));
 };
 
-export const getAccessToken = () => {
-  return accessToken;
+export const getAccessToken = (key: string) => {
+  const item = localStorage.getItem(key);
+  return item ? JSON.parse(item) : null;
 };

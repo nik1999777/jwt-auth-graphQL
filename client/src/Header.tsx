@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { setAccessToken } from "./accessToken";
+import { getAccessToken, setAccessToken } from "./accessToken";
 import { useLogoutMutation, useMeQuery } from "./generated/graphql";
 
 export const Header = () => {
@@ -7,6 +7,8 @@ export const Header = () => {
   const [logout, { client }] = useLogoutMutation();
 
   let body: any = null;
+
+  console.log(getAccessToken("accessToken"));
 
   if (loading) {
     body = null;
@@ -36,7 +38,7 @@ export const Header = () => {
             <button
               onClick={async () => {
                 await logout();
-                setAccessToken("");
+                setAccessToken("accessToken", null);
                 await client!.resetStore();
               }}
             >
