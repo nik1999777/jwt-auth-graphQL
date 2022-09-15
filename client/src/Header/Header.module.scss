@@ -1,0 +1,30 @@
+.header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  text-align: center;
+}
+
+.link {
+  text-decoration: none;
+  color: black;
+  font-size: 25px;
+  &:hover {
+    color: #1876d1;
+  }
+}
+
+.logout {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.body {
+  text-align: center;
+  border: 1px solid #1876d1;
+  max-width: 260px;
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 10px;
+  font-size: 25px;
+  font-weight: bold;
+}

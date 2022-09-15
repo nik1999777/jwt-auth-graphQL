@@ -1,9 +1,9 @@
 import { Route, Routes, BrowserRouter } from "react-router-dom";
-import { Header } from "./Header";
-import { Bye } from "./pages/Bye";
-import { Home } from "./pages/Home";
-import { Login } from "./pages/Login";
-import { Register } from "./pages/Register";
+import { Header } from "./Header/Header";
+import { Bye } from "./pages/Bye/Bye";
+import { Home } from "./pages/Home/Home";
+import { Login } from "./pages/Login/Login";
+import { Register } from "./pages/Register/Register";
 
 export const Routing: React.FC = () => {
   return (

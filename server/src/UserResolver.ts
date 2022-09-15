@@ -15,8 +15,8 @@ import { MyContext } from "./MyContext";
 import { createRefreshToken, createAccessToken } from "./auth";
 import { isAuth } from "./isAuth";
 import { sendRefreshToken } from "./sendRefreshToken";
-import { verify } from "jsonwebtoken";
 import { AppDataSource } from "./data-source";
+import { verify } from "jsonwebtoken";
 
 @ObjectType()
 class LoginResponse {
@@ -48,11 +48,10 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   me(@Ctx() context: MyContext) {
     const authorization = context.req.headers["authorization"];
-
+    console.log(authorization);
     if (!authorization) {
       return null;
     }
-
     try {
       const token = authorization.split(" ")[1];
       const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
@@ -98,8 +97,6 @@ export class UserResolver {
     if (!valid) {
       throw new Error("bad password");
     }
-
-    // login successful
 
     sendRefreshToken(res, createRefreshToken(user));
 

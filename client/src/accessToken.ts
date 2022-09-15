@@ -1,5 +1,5 @@
 export const setAccessToken = (key: string, value: any) => {
-  localStorage.setItem(key, JSON.stringify(value));
+  localStorage.setItem(key, value);
 };
 
 export const getAccessToken = (key: string) => {

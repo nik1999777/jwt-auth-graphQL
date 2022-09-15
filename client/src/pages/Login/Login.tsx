@@ -1,7 +1,9 @@
+import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { setAccessToken } from "../accessToken";
-import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
+import { setAccessToken } from "../../accessToken";
+import { MeDocument, MeQuery, useLoginMutation } from "../../generated/graphql";
+import styles from "./Login.module.scss";
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -11,6 +13,7 @@ export const Login: React.FC = () => {
 
   return (
     <form
+      className={styles.login}
       onSubmit={async e => {
         e.preventDefault();
 
@@ -38,22 +41,22 @@ export const Login: React.FC = () => {
         navigate("/");
       }}
     >
-      <div>
-        <input
-          value={email}
-          placeholder='email'
-          onChange={e => setEmail(e.target.value)}
-        />
-      </div>
-      <div>
-        <input
-          type='password'
-          value={password}
-          placeholder='password'
-          onChange={e => setPassword(e.target.value)}
-        />
-      </div>
-      <button type='submit'>Login</button>
+      <TextField
+        variant='outlined'
+        value={email}
+        label='email'
+        onChange={e => setEmail(e.target.value)}
+      />
+      <TextField
+        variant='outlined'
+        type='password'
+        value={password}
+        label='password'
+        onChange={e => setPassword(e.target.value)}
+      />
+      <Button variant='contained' type='submit'>
+        Login
+      </Button>
     </form>
   );
 };
